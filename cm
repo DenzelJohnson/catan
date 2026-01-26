@@ -17,7 +17,8 @@ git commit -m "$1"
 git fetch origin
 git rebase origin/main
 
-
+# for the first time:
+# git branch -m master main
 # "git push --set-upstream origin main" for the first time
 git push --force-with-lease origin main
 
