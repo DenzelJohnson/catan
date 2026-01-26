@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.McMaster.SE2OP3.2024</groupId>
+  <artifactId>assignment01_Team_28</artifactId> <!-- this is the first part of the name of your jar file after 'mvn package' -->
+  <packaging>jar</packaging>
+  <version>0.1.0</version><!-- this is the second part of the name of your jar file after 'mvn package' -->
+
+
+   <properties>
+     <java.version>11.0.27.6.1</java.version>
+  </properties>
+ 
+
+
+  <!-- Start:: This specifies the main class for the jar file to be executed by 'java -jar filename.jar' -->
+  <build>
+     <plugins>
+        <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-shade-plugin</artifactId>
+           <version>3.2.4</version>
+           <executions>
+              <execution>
+                 <phase>package</phase>
+                 <goals>
+                    <goal>shade</goal>
+                 </goals>
+                 <configuration>
+                    <transformers>
+                       <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                          <mainClass>part1.Main</mainClass>
+                       </transformer>
+                    </transformers>
+                 </configuration>
+              </execution>
+           </executions>
+        </plugin>
+      </plugins>
+  </build>
+  <!-- End:: This specifies the main class for the jar file to be executed by 'java -jar filename.jar' -->
+
+
+
+
+</project>
