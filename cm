@@ -13,7 +13,7 @@ git add -A
 git commit -m "$1"
 
 
-# "git remote add origin link" for the first time
+# "git remote add origin https://github.com/DenzelJohnson/catan.git" for the first time
 git fetch origin
 git rebase origin/main
 
