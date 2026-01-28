@@ -6,14 +6,14 @@ public class HumanPlayer extends Player {
 
 
 
-    public HumanPlayer(){
+    public HumanPlayer(int playerId){
 
-        super();
+        super(playerId);
 
     } 
 
-
-    public void turn(){
+    @Override
+    public void turn(Board board){
 
         int roll = diceRoll();
         

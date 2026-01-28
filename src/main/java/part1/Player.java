@@ -3,6 +3,7 @@ import java.util.Random;
 
 public abstract class Player {
 
+    private final int playerId;
     private final int[] resourceCounts = new int[ResourceType.values().length];
     private int[] buildingsCounts = new int[BuildingKind.values().length];
     private int roadsCount;
@@ -24,7 +25,9 @@ public abstract class Player {
     public abstract void turn(Board board);
 
 
-
+    public int getPlayerId(){
+        return playerId;
+    }
 
     public int diceRoll(){
 
@@ -33,6 +36,7 @@ public abstract class Player {
         return die1 + die2;
 
     }
+    
     public void endTurn();
 
 
