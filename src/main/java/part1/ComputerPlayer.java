@@ -17,7 +17,7 @@ public class ComputerPlayer extends Player {
         // 1) start turn with dice roll
         int roll = diceRoll();
 
-        // 2) add resources to hand if applicable based on roll and board
+        // 2) check to add resources based on roll
         for (int i = 0; tileId < Board.TILE_COUNT; tileId++) {
 
             Board.TerrainTile tile = board.getTile(tileId);
@@ -44,6 +44,11 @@ public class ComputerPlayer extends Player {
             }
 
         }
+
+        // 3) First 2 turns 
+
+
+        // 4) regular turn add 
         
     }
 }
