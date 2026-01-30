@@ -41,7 +41,7 @@ public class Game {
     public void startGame() {
 
         determineStartingPlayer();
-        playerFirstTwoRoundsSetup();
+        playFirstTwoRoundsSetup();
         playMainGame();
 
     }
@@ -71,23 +71,61 @@ public class Game {
                     tie = true;
                 }
             }
+
             if (!tie) {
                 break;
             }
+
         }
-        startingPlayerIndex = bestIndex = bestIndex;
+        startingPlayerIndex = bestIndex;
         currentPlayerIndex = startingPlayerIndex;
 
     }
 
     private void playFirstTwoRoundsSetup() {
 
+        // Round 1
+        for (int step = 0; step < players.size(); step++){
+            int index = getPlayerIndexClockwise(startingPlayerIndex, step);
+            Player p = players.get(index);
+
+            placeInitialSettlementAndRoad(p, false);
+            
+            currentPlayerIndex = index;
+        }
+
+
+        // Round 2
+        for (int step = 0; step < players.size(); step++){
+            int index = getPlayerIndexCounterClockwise(startingPlayerIndex, step);
+            Player p = players.get(index);
+
+            int secondSettlementNodeId = placeInitialSettlementAndRoad(p, true);
+            addStartingResourcesFromSecondSettlement(p, secondSettlementNodeId);
+            
+            currentPlayerIndex = startingPlayerIndex;
+            rounds = 0;
+        }
 
     }
 
     private void playMainGame() {
 
+        while (!isWinner && rounds < MAX_ROUNDS) {
+            for (int step = 0; step < players.size(); step++){
+                currentPlayerIndex = getPlayerIndexClockwise(startingPlayerIndex, step);
+                Player p = players.get(currentPlayerIndex);
 
+                p.turn(board);
+                checkWinner();
+
+                if (isWinner) {
+                    break;
+                }
+
+                rounds++;
+            }
+        }
     }
 
 
@@ -105,19 +143,33 @@ public class Game {
 
     }
 
-    private int clockwiseIndex() {
+    private int getPlayerIndexClockwise(int startIndex, int stepsForward) {
 
+        int playerCount = players.size();
+        int indexAfterMovingForward = startIndex + stepsForward;
+        int indexAfterRotating = indexAfterMovingForward % playerCount;
+        return indexAfterRotating;
 
     }
 
-    private int counterClockwiseIndex() {
+    private int getPlayerIndexCounterClockwise(int startIndex, int stepsBackward) {
 
+        int playerCount = players.size();
+        int indexAfterMovingBackwards = startIndex - stepsBackward;
+
+        while (indexAfterMovingBackwards < 0) {
+            indexAfterMovingBackwards = indexAfterMovingBackwards + playerCount;
+        }
+
+        int indexAfterRotating = indexAfterMovingBackwards % playerCount;
+        return indexAfterRotating;
 
     }
 
     private int placeInitialSettlementAndRoad() {
 
-
+        return -1;
+        
     }
 
     private void addStartingResourcesFromSecondSettlement() {
