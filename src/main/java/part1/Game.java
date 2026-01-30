@@ -1,4 +1,7 @@
 package part1;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Game {
 
@@ -45,6 +48,35 @@ public class Game {
 
     private void determineStartingPlayer() {
 
+        int bestRoll = -1;
+        int bestIndex = 0;
+
+        while (true) {
+
+            bestRoll = -1;
+            bestIndex = 0;
+            boolean tie = false;
+
+            for (int i = 0; i < players.size(); i++) {
+
+                int roll = players.get(i).diceRoll();
+                if (roll > bestRoll) {
+
+                    bestRoll = roll;
+                    bestIndex = i;
+                    tie = false;
+                }
+                else if (roll == bestRoll) {
+
+                    tie = true;
+                }
+            }
+            if (!tie) {
+                break;
+            }
+        }
+        startingPlayerIndex = bestIndex = bestIndex;
+        currentPlayerIndex = startingPlayerIndex;
 
     }
 
