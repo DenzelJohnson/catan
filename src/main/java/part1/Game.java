@@ -89,6 +89,8 @@ public class Game {
     private void playFirstTwoRoundsSetup() {
 
         // Round 1
+        System.out.println("\nGame has started!\n");
+
         for (int step = 0; step < players.size(); step++){
             int index = getPlayerIndexClockwise(startingPlayerIndex, step);
             Player p = players.get(index);
@@ -96,7 +98,7 @@ public class Game {
             placeInitialSettlementAndRoad(p, 1);
             currentPlayerIndex = index;
         }
-
+        displayRoundSummary();
 
         // Round 2
         for (int step = 0; step < players.size(); step++){
@@ -108,15 +110,17 @@ public class Game {
             
             currentPlayerIndex = index;
         }
+        displayRoundSummary();
 
         currentPlayerIndex = startingPlayerIndex;
-        rounds = 0;
+        rounds = 2;
 
     }
 
     private void playMainGame() {
 
         while (!isWinner && rounds < MAX_ROUNDS) {
+
             for (int step = 0; step < players.size(); step++){
                 currentPlayerIndex = getPlayerIndexClockwise(startingPlayerIndex, step);
                 Player p = players.get(currentPlayerIndex);
@@ -128,8 +132,11 @@ public class Game {
                     break;
                 }
 
-                rounds++;
             }
+
+            displayRoundSummary();
+            rounds++;
+
         }
     }
 
@@ -171,6 +178,10 @@ public class Game {
 
     }
 
+    /**
+     * Instead of using instanceof,
+     * Use abstract methods in player class to handle human and computer
+     */
     private int placeInitialSettlementAndRoad(Player p, int roundNumber) {
 
         if (p instanceof ComputerPlayer) {
@@ -219,6 +230,42 @@ public class Game {
     private void displayTurnSummary(int roundNumber, int playerId, String action) {
 
         System.out.println("[" + roundNumber + "] / [" + playerId + "]: " + action);
+
+        try { 
+            Thread.sleep(2000);
+        } 
+
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+    }
+
+    private void displayRoundSummary() {
+
+        StringBuilder summary = new StringBuilder();
+
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+
+            summary.append("Player ").append(p.getPlayerId()).append(": ");
+
+            for (int r = 0; r < ResourceType.values().length; r++) {
+                ResourceType type = ResourceType.values()[r];
+
+                summary.append(type.name()).append("=").append(p.getResourceCount(type));
+
+                if (r < ResourceType.values().length - 1) {
+                    summary.append(", ");
+                }
+            }
+
+            summary.append(" | longestRoadStreak=").append(p.getLongestRoadStreak()).append(" | victoryPoints=").append(p.getVictoryPoints());
+            summary.append("\n\n\n");
+                    
+        }
+
+        System.out.print(summary.toString());
 
         try { 
             Thread.sleep(2000);

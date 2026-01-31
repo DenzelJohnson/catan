@@ -6,9 +6,10 @@ public abstract class Player {
     private final int playerId;
 
     private final int[] resourceCounts = new int[ResourceType.values().length];
+    
     private int[] buildingCounts = new int[BuildingKind.values().length];
-
     private int roadsCount;
+    
     private int victoryPoints;
     private int longestRoadStreak;
     private int turns;
@@ -31,6 +32,14 @@ public abstract class Player {
 
     public int getPlayerId(){
         return playerId;
+    }
+
+    public int getVictoryPoints() {
+        return victoryPoints;
+    }
+
+    public int getLongestRoadStreak() {
+        return longestRoadStreak;
     }
 
     public int diceRoll(){
@@ -134,4 +143,6 @@ public abstract class Player {
         }
         roadsCount -= amount;
     }
+
+
 }
