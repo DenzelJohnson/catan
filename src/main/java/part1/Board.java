@@ -30,20 +30,101 @@ public class Board {
     private Building[] buildings = new Building[NODE_COUNT];
     private Road[] roads = new Road[EDGE_COUNT];
 
-    private static final ResourceType[] TILE_RESOURCE_TYPES = new ResourceType[] 
+    private final List<Integer>[] nodeToEdgeIndicies = (List<Integer>[]) new List[NODE_COUNT];
+    private static final TerrainTile[] terrainTilesSetup = new TerrainTile[] {
+
+        new TerrainTile(0, ResourceType.LUMBER, 10, new int[] {0, 1, 2, 3, 4, 5}),
+        new TerrainTile(1, ResourceType.GRAIN, 11, new int[] {6, 7, 8, 9, 2, 1}),
+        new TerrainTile(2, ResourceType.BRICK, 8, new int[] {2, 9, 10, 11, 12, 3}),
+        new TerrainTile(3, ResourceType.ORE, 3, new int[] {4, 3, 12, 13, 14, 15}),
+        new TerrainTile(4, ResourceType.WOOL, 11, new int[] {16, 5, 4, 15, 17, 18}),
+        new TerrainTile(5, ResourceType.WOOL, 5, new int[] {19, 20, 0, 5, 16, 21}),
+        new TerrainTile(6, ResourceType.WOOL, 12, new int[] {22, 23, 6, 1, 0, 20}),        
+        new TerrainTile(7, ResourceType.GRAIN, 3, new int[] {24, 25, 26, 27 ,8, 7}),
+        new TerrainTile(8, ResourceType.ORE, 6, new int[] {8, 27, 28, 29, 10, 9}),
+        new TerrainTile(9, ResourceType.LUMBER, 4, new int[] {10, 29, 30, 31, 32, 11}),
+        new TerrainTile(10, ResourceType.ORE, 6, new int[] {12, 11, 32, 33, 34, 13}),
+        new TerrainTile(11, ResourceType.GRAIN, 9, new int[] {14, 13, 34, 35, 36, 37}),
+        new TerrainTile(12, ResourceType.LUMBER, 5, new int[] {17, 15, 14, 37, 38, 39}),
+        new TerrainTile(13, ResourceType.BRICK, 9, new int[] {40, 18, 17, 39, 41, 42}),
+        new TerrainTile(14, ResourceType.BRICK, 8, new int[] {43, 21, 16, 18, 40, 44}),
+        new TerrainTile(15, ResourceType.GRAIN, 4, new int[] {47, 46, 19, 21, 43, 45}),
+        new TerrainTile(16, null,               0, new int[] {48, 49, 22, 20, 19, 46}),
+        new TerrainTile(17, ResourceType.LUMBER, 2, new int[] {50, 51, 52, 23, 22, 49}),
+        new TerrainTile(18, ResourceType.WOOL, 10, new int[] {52, 53, 24, 7, 6, 23})
+
+    }
+
 
     public Board() {
 
-        // 1) Create Node objects
+        initEmptyState();
+        initNodes0to53();
+        initTilesFromSetupArray();
+        populateNodeAdjacentTileIdsFromTiles();
+        buildEdgesFromTilePerimetersAndAssignIds();
+        populateNodeNeighbourNodeIdsFromEdges(); s
 
-
-        // 2) Create TerrainTile objects
-
-
-        // 3) Create Edges
-
-        
     }
+
+    // Initialize Board helpers
+    private void initEmptyState() {
+
+        for (int i = 0; i < NODE_COUNT; i++) {
+            buildings[i] = null;
+        }
+
+    }
+
+    private void initNodes0to53() {
+
+
+
+    }
+
+    private void initTilesFromSetupArray() {
+
+
+
+    }
+
+    private void populateNodeAdjacentTileIdsFromTiles() {
+
+
+
+    }
+
+    private void buildEdgesFromTilePerimetersAndAssignIds() {
+
+
+
+    }
+
+    private void populateNodeNeighbourNodeIdsFromEdges() {
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
