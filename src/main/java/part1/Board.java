@@ -229,7 +229,9 @@ public class Board {
 
     // Methods
 
-    public void placeSettlement(int nodeId, int ownerPlayerId) {
+    public void placeSettlement(int nodeId, Player owner) {
+
+        int ownerPlayerId = owner.getPlayerId();
 
         if (!isNodeEmpty(nodeId)){
             throw new IllegalStateException("Node is alreayd occupied: " + nodeId);
@@ -239,6 +241,7 @@ public class Board {
         }
 
         buildings[nodeId] = new Building(ownerPlayerId, nodeId, BuildingKind.SETTLEMENT);
+        owner.addVictoryPoints(1);
     
     }
 
@@ -319,6 +322,7 @@ public class Board {
 
         return resourceTypes;
     }
+
 
 
 

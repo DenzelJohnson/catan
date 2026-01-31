@@ -98,7 +98,8 @@ public class Game {
             placeInitialSettlementAndRoad(p, 1);
             currentPlayerIndex = index;
         }
-        displayRoundSummary();
+        rounds = 1;
+        displayRoundSummary(rounds);
 
         // Round 2
         for (int step = 0; step < players.size(); step++){
@@ -110,10 +111,11 @@ public class Game {
             
             currentPlayerIndex = index;
         }
-        displayRoundSummary();
-
-        currentPlayerIndex = startingPlayerIndex;
+        
         rounds = 2;
+        displayRoundSummary(rounds);
+        currentPlayerIndex = startingPlayerIndex;
+        
 
     }
 
@@ -134,8 +136,8 @@ public class Game {
 
             }
 
-            displayRoundSummary();
             rounds++;
+            displayRoundSummary(rounds);
 
         }
     }
@@ -232,7 +234,7 @@ public class Game {
         System.out.println("[" + roundNumber + "] / [" + playerId + "]: " + action);
 
         try { 
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } 
 
         catch (InterruptedException e) {
@@ -241,9 +243,10 @@ public class Game {
 
     }
 
-    private void displayRoundSummary() {
+    private void displayRoundSummary(int currentRound) {
 
         StringBuilder summary = new StringBuilder();
+        summary.append("Round " + rounds + " Summary: \n\n");
 
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
@@ -261,10 +264,11 @@ public class Game {
             }
 
             summary.append(" | longestRoadStreak=").append(p.getLongestRoadStreak()).append(" | victoryPoints=").append(p.getVictoryPoints());
-            summary.append("\n\n\n");
+            summary.append("\n\n");
                     
         }
 
+        summary.append("---------------------------------------------------------------------------------\n\n");
         System.out.print(summary.toString());
 
         try { 

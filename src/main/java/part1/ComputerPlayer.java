@@ -83,7 +83,7 @@ public class ComputerPlayer extends Player {
                 continue;
             }
 
-            board.placeSettlement(nodeId, getPlayerId());
+            board.placeSettlement(nodeId, this);
             return nodeId;
 
         }

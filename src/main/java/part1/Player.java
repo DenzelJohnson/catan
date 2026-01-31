@@ -42,6 +42,10 @@ public abstract class Player {
         return longestRoadStreak;
     }
 
+    public void addVictoryPoints(int amount) {
+        victoryPoints += amount;
+    }
+
     public int diceRoll(){
 
         int die1 = r.nextInt(6) + 1;
