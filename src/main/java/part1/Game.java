@@ -17,6 +17,8 @@ public class Game {
     private boolean isWinner;
     private Player winner;
 
+    private Player longestRoadHolder;
+
 
     public Game(Board board, List<Player> players) {
 
@@ -30,6 +32,8 @@ public class Game {
         this.isWinner = false;
         this.winner = null;
 
+        this.longestRoadHolder = null;
+
     }
 
 
@@ -42,7 +46,7 @@ public class Game {
         determineStartingPlayer();
 
         playFirstTwoRoundsSetup();
-        // playMainGame();
+        playMainGame();
 
     }
 
@@ -217,7 +221,7 @@ public class Game {
         System.out.println("[" + roundNumber + "] / [" + playerId + "]: " + action);
 
         try { 
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } 
 
         catch (InterruptedException e) {
