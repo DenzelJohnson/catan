@@ -2,10 +2,10 @@ package part1;
 
 public enum ResourceType {
 
+    LUMBER,
     BRICK, 
-    LUMBER, 
-    ORE, 
-    GRAIN, 
-    WOOL
+    WOOL, 
+    GRAIN,
+    ORE
     
 }

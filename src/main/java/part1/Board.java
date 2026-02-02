@@ -245,6 +245,25 @@ public class Board {
     
     }
 
+    public void placeCity(int nodeId, Player owner) {
+
+        int ownerPlayerId = owner.getPlayerId();
+        Building existing = buildings[nodeId];
+
+        if (existing == null) {
+            throw new IllegalStateException("No settlement to upgrade at node " + nodeId);
+        }
+        if (existing.ownerPlayerId != ownerPlayerId) {
+            throw new IllegalStateException("Cannot upgrade! Building not owned by player " + ownerPlayerId);
+        }
+        if (existing.kind != BuildingKind.SETTLEMENT) {
+            throw new IllegalStateException("Only settlements can be upgraded to cities at node " + nodeId);
+        }
+
+        buildings[nodeId] = new Building(ownerPlayerId, nodeId, BuildingKind.CITY);
+        owner.addVictoryPoints(1);
+    }
+
     public void placeRoad(int edgeIndex, int ownerPlayerId) {
 
         if (edgeIndex < 0 || edgeIndex >= EDGE_COUNT){
@@ -341,6 +360,12 @@ public class Board {
     }
     public Building getBuilding(int nodeId){
         return buildings[nodeId];
+    }
+    public Road getRoad(int edgeIndex) {
+        return roads[edgeIndex];
+    }
+    public Edge getEdge(int edgeIndex) {
+        return edges.get(edgeIndex);
     }
     public boolean isRoadEmpty(int edgeIndex) {
         return roads[edgeIndex] == null;

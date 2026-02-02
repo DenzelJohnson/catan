@@ -19,7 +19,6 @@ public class Demonstrator {
         players.add(new ComputerPlayer(0));
         players.add(new ComputerPlayer(1));
         players.add(new ComputerPlayer(2));
-        players.add(new ComputerPlayer(3));
 
         Board board = new Board();
         Game game = new Game(board, players);

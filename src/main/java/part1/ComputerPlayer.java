@@ -17,14 +17,15 @@ public class ComputerPlayer extends Player {
 
 
 
-    // most important method
+
     @Override
     public void turn(Board board){
 
-        // 1) start turn with dice roll
+    // 1) start turn with dice roll
         int roll = diceRoll();
 
-        // 2) check to add resources based on roll
+
+    // 2) check to add resources based on roll
         for (int tileId = 0; tileId < Board.TILE_COUNT; tileId++) {
 
             Board.TerrainTile tile = board.getTile(tileId);
@@ -33,6 +34,9 @@ public class ComputerPlayer extends Player {
                 continue;
             }
             if (tile.diceToken != roll) {
+                continue;
+            }
+            if (tile.resourceType == null) { // desert
                 continue;
             }
             
@@ -55,7 +59,64 @@ public class ComputerPlayer extends Player {
 
         }
 
-        // 3) regular turn options
+
+    // 3) Find all valid moves between...
+        // --> Build road
+        // --> Build settlement
+        // --> Build city
+        // a) validate user has enough resources before checking valid moves
+        boolean canBuildRoad = canAffordRoad();
+        boolean canBuildSettlement = canAffordSettlement();
+        boolean canBuildCity = canAffordCity();
+
+        if (!canBuildRoad && !canBuildSettlement && !canBuildCity) {
+            return;
+        }
+
+        // b) Check valid placements
+        List<Integer> validRoadEdges = new ArrayList<Integer>();
+        List<Integer> validSettlementNodes = new ArrayList<Integer>();
+        List<Integer> validCityNodes = new ArrayList<Integer>();
+
+        if (canBuildRoad) {
+            validRoadEdges = findValidRoadPlacements(board);
+        }
+
+        if (canBuildSettlement) {
+            validSettlementNodes = findValidSettlementPlacements(board);
+        }
+
+        if (canBuildCity) {
+            validCityNodes = findValidCityPlacements(board);
+        }
+
+
+    // 4) Randomize move between valid options
+        int totalOptions = validRoadEdges.size() + validSettlementNodes.size() + validCityNodes.size();
+        if (totalOptions == 0) {
+            return;
+        }
+        int choice = r.nextInt(totalOptions);
+
+        // buildRoad
+        if (choice < validRoadEdges.size()) {
+            int edgeIndex = validRoadEdges.get(choice).intValue();
+            buildRoad(board, edgeIndex);
+            return;
+        }
+
+        // buildSettlement
+        choice -= validRoadEdges.size();
+        if (choice < validSettlementNodes.size()) {
+            int nodeId = validSettlementNodes.get(choice).intValue();
+            buildSettlement(board, nodeId);
+            return;
+        }
+
+        // buildCity
+        choice -= validSettlementNodes.size();
+        int nodeId = validCityNodes.get(choice).intValue();
+        buildCity(board, nodeId);
         
     }
 
@@ -67,8 +128,8 @@ public class ComputerPlayer extends Player {
 
 
 
-    // helpers
-    public int placeRandomValidHouse(Board board, boolean isSecondSettlement) {
+    // Helpers
+    public int placeRandomValidSettlement(Board board, boolean isSecondSettlement) {
 
         int maxAttempts = 10000;
 

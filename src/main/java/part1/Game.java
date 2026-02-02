@@ -99,7 +99,7 @@ public class Game {
             currentPlayerIndex = index;
         }
         rounds = 1;
-        displayRoundSummary(rounds);
+        displayRoundSummary();
 
         // Round 2
         for (int step = 0; step < players.size(); step++){
@@ -113,7 +113,7 @@ public class Game {
         }
         
         rounds = 2;
-        displayRoundSummary(rounds);
+        displayRoundSummary();
         currentPlayerIndex = startingPlayerIndex;
         
 
@@ -137,25 +137,42 @@ public class Game {
             }
 
             rounds++;
-            displayRoundSummary(rounds);
+            displayRoundSummary();
 
+        }
+
+        if (!isWinner) {
+            System.out.println("\n\nGame Over! Max round reached.\n");
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     private void checkWinner() {
 
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+
+            if (p.getVictoryPoints() >= TARGET_VICTORY_POINTS) {
+                isWinner = true;
+                winner = p;
+
+                System.out.println("\n\nGame Over! Player " + p.getPlayerId() + " reached " + p.getVictoryPoints() + " victory points.\n");
+
+                return;
+            }
+        }
 
     }
+
+
+
+
+
+
+
+
+
+
+
 
     private int getPlayerIndexClockwise(int startIndex, int stepsForward) {
 
@@ -190,11 +207,11 @@ public class Game {
 
             ComputerPlayer cp = (ComputerPlayer) p;
 
-            int settlementNodeId = cp.placeRandomValidHouse(board, (roundNumber == 2));
+            int settlementNodeId = cp.placeRandomValidSettlement(board, (roundNumber == 2));
             displayTurnSummary(roundNumber, p.getPlayerId(), "Placed settlement at node " + settlementNodeId);
 
             int edgeIndex = cp.placeRandomValidRoad(board, settlementNodeId);
-            displayTurnSummary(roundNumber, p.getPlayerId(), "Placed road at edge " + edgeIndex + " (edjacent to node " + settlementNodeId + ")");
+            displayTurnSummary(roundNumber, p.getPlayerId(), "Placed road at edge " + edgeIndex + " (adjacent to node " + settlementNodeId + ")");
 
             return settlementNodeId;
 
@@ -233,6 +250,7 @@ public class Game {
 
         System.out.println("[" + roundNumber + "] / [" + playerId + "]: " + action);
 
+        
         try { 
             Thread.sleep(1000);
         } 
@@ -243,7 +261,7 @@ public class Game {
 
     }
 
-    private void displayRoundSummary(int currentRound) {
+    private void displayRoundSummary() {
 
         StringBuilder summary = new StringBuilder();
         summary.append("Round " + rounds + " Summary: \n\n");
@@ -270,6 +288,7 @@ public class Game {
 
         summary.append("---------------------------------------------------------------------------------\n\n");
         System.out.print(summary.toString());
+
 
         try { 
             Thread.sleep(2000);

@@ -1,5 +1,7 @@
 package part1;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Player {
 
@@ -30,6 +32,177 @@ public abstract class Player {
     public abstract void turn(Board board);
 
 
+
+
+
+
+
+
+    // helpers
+
+    public int diceRoll(){
+        int die1 = r.nextInt(6) + 1;
+        int die2 = r.nextInt(6) + 1;
+        return die1 + die2;
+    }
+
+    // Resources
+    public void buildRoad(Board board, int edgeIndex) {
+        spendResource(ResourceType.LUMBER, 1);
+        spendResource(ResourceType.BRICK, 1);
+        board.placeRoad(edgeIndex, getPlayerId());
+    }
+
+    public void buildSettlement(Board board, int nodeId) {
+        spendResource(ResourceType.LUMBER, 1);
+        spendResource(ResourceType.BRICK, 1);
+        spendResource(ResourceType.WOOL, 1);
+        spendResource(ResourceType.GRAIN, 1);
+        board.placeSettlement(nodeId, this);
+    }
+
+    public void buildCity(Board board, int nodeId) {
+        spendResource(ResourceType.GRAIN, 2);
+        spendResource(ResourceType.ORE, 3);
+        board.placeCity(nodeId, this);
+    }
+
+    public boolean canAffordRoad() {
+        boolean canAfford = hasAtLeastXResources(ResourceType.LUMBER, 1) && hasAtLeastXResources(ResourceType.BRICK, 1);
+        return canAfford;
+    }
+
+    public boolean canAffordSettlement() {
+        boolean canAfford = hasAtLeastXResources(ResourceType.LUMBER, 1) && hasAtLeastXResources(ResourceType.BRICK, 1) && hasAtLeastXResources(ResourceType.WOOL, 1) && hasAtLeastXResources(ResourceType.GRAIN, 1);
+        return canAfford;
+    }
+
+    public boolean canAffordCity() {
+        boolean canAfford = hasAtLeastXResources(ResourceType.GRAIN, 2) && hasAtLeastXResources(ResourceType.ORE, 3);
+        return canAfford;
+    }
+
+    // Valid Infrastructure
+    public List<Integer> findValidRoadPlacements(Board board) {
+        List<Integer> result = new ArrayList<Integer>();
+
+        for (int edgeIndex = 0; edgeIndex < Board.EDGE_COUNT; edgeIndex++) {
+            if (!board.isRoadEmpty(edgeIndex)) {
+                continue;
+            }
+
+            if (isEdgeConnectedToMyRoad(board, edgeIndex)) {
+                result.add(Integer.valueOf(edgeIndex));
+            }
+        }
+
+        return result;
+    }
+
+    public List<Integer> findValidSettlementPlacements(Board board) {
+        List<Integer> result = new ArrayList<Integer>();
+
+        for (int nodeId = 0; nodeId < Board.NODE_COUNT; nodeId++) {
+            if (!board.isNodeEmpty(nodeId)) {
+                continue;
+            }
+            if (board.violatesDistanceRule(nodeId)) {
+                continue;
+            }
+            if (!doesNodeTouchMyRoad(board, nodeId)) {
+                continue;
+            }
+
+            result.add(Integer.valueOf(nodeId));
+            
+        }
+
+        return result;
+    }
+
+    public List<Integer> findValidCityPlacements(Board board) {
+        List<Integer> result = new ArrayList<Integer>();
+
+        for (int nodeId = 0; nodeId < Board.NODE_COUNT; nodeId++) {
+            Board.Building b = board.getBuilding(nodeId);
+            if (b == null) {
+                continue;
+            }
+            if (b.ownerPlayerId != getPlayerId()) {
+                continue;
+            }
+            if (b.kind != BuildingKind.SETTLEMENT) {
+                continue;
+            }
+
+            result.add(Integer.valueOf(nodeId));
+            
+        }
+
+        return result;
+    }
+
+    public boolean isEdgeConnectedToMyRoad(Board board, int edgeIndex) {
+        Board.Edge e = board.getEdge(edgeIndex);
+
+        if (doesNodeHaveMyBuilding(board, e.node1)) {
+            return true;
+        }
+        if (doesNodeHaveMyBuilding(board, e.node2)) {
+            return true;
+        }
+
+        if (doesNodeTouchMyRoad(board, e.node1)) {
+            return true;
+        }
+        if (doesNodeTouchMyRoad(board, e.node2)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean doesNodeHaveMyBuilding(Board board, int nodeId) {
+        Board.Building b = board.getBuilding(nodeId);
+        if (b == null) {
+            return false;
+        }
+        return b.ownerPlayerId == getPlayerId();
+    }
+
+    public boolean doesNodeTouchMyRoad(Board board, int nodeId) {
+        List<Integer> adjacentEdges = board.getAdjacentEdgeIndicesForNode(nodeId);
+
+        for (int i = 0; i < adjacentEdges.size(); i++) {
+            int edgeIndex = adjacentEdges.get(i).intValue();
+
+            Board.Road road = board.getRoad(edgeIndex);
+            if (road == null) {
+                continue;
+            }
+
+            int ownerId = road.ownerPlayerId;
+            if (ownerId == getPlayerId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // Getters && Setters
+
     public int getPlayerId(){
         return playerId;
     }
@@ -46,38 +219,6 @@ public abstract class Player {
         victoryPoints += amount;
     }
 
-    public int diceRoll(){
-
-        int die1 = r.nextInt(6) + 1;
-        int die2 = r.nextInt(6) + 1;
-        return die1 + die2;
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // RESOURCES
 
@@ -85,14 +226,14 @@ public abstract class Player {
         return resourceCounts[type.ordinal()];
     }
 
+    public boolean hasAtLeastXResources(ResourceType type, int amount){
+        return resourceCounts[type.ordinal()] >= amount;
+    }
+
     public void addResource(ResourceType type, int amount) {
         resourceCounts[type.ordinal()] += amount;
     }
 
-    public boolean hasAtLeastXResources(ResourceType type, int amount){
-        return resourceCounts[type.ordinal()] >= amount;
-    }
-    
     public void spendResource(ResourceType type, int amount){
         int index = type.ordinal();
         if (resourceCounts[index] < amount) {
@@ -101,20 +242,18 @@ public abstract class Player {
         resourceCounts[index] -= amount;
     }
 
-    
-    
     // BUILDINGS
     
     public int getBuildingCount(BuildingKind type){
         return buildingCounts[type.ordinal()];
     }
 
-    public void addBuilding(BuildingKind type, int amount) {
-        buildingCounts[type.ordinal()] += amount;
-    }
-
     public boolean hasAtLeastXBuildings(BuildingKind type, int amount){
         return buildingCounts[type.ordinal()] >= amount;
+    }
+
+    public void addBuilding(BuildingKind type, int amount) {
+        buildingCounts[type.ordinal()] += amount;
     }
     
     public void spendBuilding(BuildingKind type, int amount){
@@ -125,20 +264,18 @@ public abstract class Player {
         buildingCounts[index] -= amount;
     }
 
-
-
     // ROADS
 
     public int getRoadsCount() {
         return roadsCount;
     }
 
-    public void addRoads(int amount){
-        roadsCount += amount;
-    }
-
     public boolean hasAtLeastXRoads(int amount){
         return roadsCount >= amount;
+    }
+
+    public void addRoads(int amount){
+        roadsCount += amount;
     }
 
     public void spendRoads(int amount){
