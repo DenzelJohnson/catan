@@ -50,6 +50,9 @@ public abstract class Player {
     public void buildRoad(Board board, int edgeIndex) {
         spendResource(ResourceType.LUMBER, 1);
         spendResource(ResourceType.BRICK, 1);
+
+        spendRoads(1);
+
         board.placeRoad(edgeIndex, getPlayerId());
     }
 
@@ -58,31 +61,43 @@ public abstract class Player {
         spendResource(ResourceType.BRICK, 1);
         spendResource(ResourceType.WOOL, 1);
         spendResource(ResourceType.GRAIN, 1);
+
+        spendBuilding(BuildingKind.SETTLEMENT, 1);
+
         board.placeSettlement(nodeId, this);
     }
 
     public void buildCity(Board board, int nodeId) {
         spendResource(ResourceType.GRAIN, 2);
         spendResource(ResourceType.ORE, 3);
+
+        spendBuilding(BuildingKind.CITY, 1);
+
         board.placeCity(nodeId, this);
     }
 
     public boolean canAffordRoad() {
-        boolean canAfford = hasAtLeastXResources(ResourceType.LUMBER, 1) && hasAtLeastXResources(ResourceType.BRICK, 1);
-        return canAfford;
+        boolean enoughResources = hasAtLeastXResources(ResourceType.LUMBER, 1) && hasAtLeastXResources(ResourceType.BRICK, 1);
+        boolean enoughRoads = hasAtLeastXRoads(1);
+        boolean affordable = enoughResources && enoughRoads;
+        return affordable;
     }
 
     public boolean canAffordSettlement() {
-        boolean canAfford = hasAtLeastXResources(ResourceType.LUMBER, 1) && hasAtLeastXResources(ResourceType.BRICK, 1) && hasAtLeastXResources(ResourceType.WOOL, 1) && hasAtLeastXResources(ResourceType.GRAIN, 1);
-        return canAfford;
+        boolean enoughResources = hasAtLeastXResources(ResourceType.LUMBER, 1) && hasAtLeastXResources(ResourceType.BRICK, 1) && hasAtLeastXResources(ResourceType.WOOL, 1) && hasAtLeastXResources(ResourceType.GRAIN, 1);
+        boolean enoughSettlements = hasAtLeastXBuildings(BuildingKind.SETTLEMENT, 1);
+        boolean affordable = enoughResources && enoughSettlements;
+        return affordable;
     }
 
     public boolean canAffordCity() {
-        boolean canAfford = hasAtLeastXResources(ResourceType.GRAIN, 2) && hasAtLeastXResources(ResourceType.ORE, 3);
-        return canAfford;
+        boolean enoughResources = hasAtLeastXResources(ResourceType.GRAIN, 2) && hasAtLeastXResources(ResourceType.ORE, 3);
+        boolean enoughCities = hasAtLeastXBuildings(BuildingKind.CITY, 1);
+        boolean affordable = enoughResources && enoughCities;
+        return affordable;
     }
 
-    // Valid Infrastructure
+    // Get Valid Infrastructure
     public List<Integer> findValidRoadPlacements(Board board) {
         List<Integer> result = new ArrayList<Integer>();
 
