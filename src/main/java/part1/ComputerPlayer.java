@@ -69,71 +69,86 @@ public class ComputerPlayer extends Player {
         }
 
 
-    // 3) Find all valid moves between...
-        // --> Build road
-        // --> Build settlement
-        // --> Build city
-        // a) validate user has enough resources before checking valid moves
-        boolean canBuildRoad = canAffordRoad();
-        boolean canBuildSettlement = canAffordSettlement();
-        boolean canBuildCity = canAffordCity();
-
-        if (!canBuildRoad && !canBuildSettlement && !canBuildCity) {
-            return "Cannot afford any roads or buildings.";
+        int totalCards = 0;
+        for (int i = 0; i < ResourceType.values().length; i++) {
+            ResourceType type = ResourceType.values()[i];
+            totalCards += getResourceCount(type);
         }
 
-        // b) Check valid placements
-        List<Integer> validRoadEdges = new ArrayList<Integer>();
-        List<Integer> validSettlementNodes = new ArrayList<Integer>();
-        List<Integer> validCityNodes = new ArrayList<Integer>();
+        if (totalCards > 7) { // R1.8
 
-        if (canBuildRoad) {
-            validRoadEdges = findValidRoadPlacements(board);
-        }
+        // 3) Find all valid moves between...
+            // --> Build road
+            // --> Build settlement
+            // --> Build city
+            // a) validate user has enough resources before checking valid moves
+            boolean canBuildRoad = canAffordRoad();
+            boolean canBuildSettlement = canAffordSettlement();
+            boolean canBuildCity = canAffordCity();
 
-        if (canBuildSettlement) {
-            validSettlementNodes = findValidSettlementPlacements(board);
-        }
+            if (!canBuildRoad && !canBuildSettlement && !canBuildCity) {
+                return "Cannot afford any roads or buildings.";
+            }
 
-        if (canBuildCity) {
-            validCityNodes = findValidCityPlacements(board);
-        }
+            // b) Check valid placements
+            List<Integer> validRoadEdges = new ArrayList<Integer>();
+            List<Integer> validSettlementNodes = new ArrayList<Integer>();
+            List<Integer> validCityNodes = new ArrayList<Integer>();
+
+            if (canBuildRoad) {
+                validRoadEdges = findValidRoadPlacements(board);
+            }
+
+            if (canBuildSettlement) {
+                validSettlementNodes = findValidSettlementPlacements(board);
+            }
+
+            if (canBuildCity) {
+                validCityNodes = findValidCityPlacements(board);
+            }
 
 
-    // 4) Randomize move between valid options
-        int totalOptions = validRoadEdges.size() + validSettlementNodes.size() + validCityNodes.size();
-        if (totalOptions == 0) {
-            action += "No valid moves to be made.";
+        // 4) Randomize move between valid options
+            int totalOptions = validRoadEdges.size() + validSettlementNodes.size() + validCityNodes.size();
+            if (totalOptions == 0) {
+                action += "No valid moves to be made.";
+                return action;
+            }
+            int choice = r.nextInt(totalOptions);
+
+            // buildRoad
+            if (choice < validRoadEdges.size()) {
+                int edgeIndex = validRoadEdges.get(choice).intValue();
+                buildRoad(board, edgeIndex);
+                action += "Placed road at edge " + edgeIndex;
+                return action;
+
+            }
+
+            // buildSettlement
+            choice -= validRoadEdges.size();
+            if (choice < validSettlementNodes.size()) {
+                int nodeId = validSettlementNodes.get(choice).intValue();
+                buildSettlement(board, nodeId);
+                action += "Placed settlement at node " + nodeId;
+                return action;
+
+            }
+
+            // buildCity
+            choice -= validSettlementNodes.size();
+            int nodeId = validCityNodes.get(choice).intValue();
+            buildCity(board, nodeId);
+            action += "Placed city at node " + nodeId;
             return action;
         }
-        int choice = r.nextInt(totalOptions);
 
-        // buildRoad
-        if (choice < validRoadEdges.size()) {
-            int edgeIndex = validRoadEdges.get(choice).intValue();
-            buildRoad(board, edgeIndex);
-            action += "Placed road at edge " + edgeIndex;
-            return action;
-
+        else { // under 8 cards
+            action += "Under 8 cards, so no move.";
         }
 
-        // buildSettlement
-        choice -= validRoadEdges.size();
-        if (choice < validSettlementNodes.size()) {
-            int nodeId = validSettlementNodes.get(choice).intValue();
-            buildSettlement(board, nodeId);
-            action += "Placed settlement at node " + nodeId;
-            return action;
-
-        }
-
-        // buildCity
-        choice -= validSettlementNodes.size();
-        int nodeId = validCityNodes.get(choice).intValue();
-        buildCity(board, nodeId);
-        action += "Placed city at node " + nodeId;
         return action;
-        
+
     }
 
 
