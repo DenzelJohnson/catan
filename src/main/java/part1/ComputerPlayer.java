@@ -19,9 +19,10 @@ public class ComputerPlayer extends Player {
 
 
     @Override
-    public void turn(Board board){
+    public String turn(Board board){
 
     // 1) start turn with dice roll
+        String action = "";
         int roll = diceRoll();
 
 
@@ -53,8 +54,16 @@ public class ComputerPlayer extends Player {
                     continue;
                 }
 
-                int amount = (building.kind == BuildingKind.SETTLEMENT) ? 1 : 2;
+                int amount;
+                if (building.kind == BuildingKind.SETTLEMENT) {
+                    amount = 1; 
+                } else {
+                    amount = 2;
+                }
+
                 addResource(tile.resourceType, amount);
+                action += "Combined dice roll is " + roll + ". So, collected " + amount + " " + tile.resourceType + ". ";
+
             }
 
         }
@@ -70,7 +79,7 @@ public class ComputerPlayer extends Player {
         boolean canBuildCity = canAffordCity();
 
         if (!canBuildRoad && !canBuildSettlement && !canBuildCity) {
-            return;
+            return "Cannot afford any roads or buildings.";
         }
 
         // b) Check valid placements
@@ -94,7 +103,8 @@ public class ComputerPlayer extends Player {
     // 4) Randomize move between valid options
         int totalOptions = validRoadEdges.size() + validSettlementNodes.size() + validCityNodes.size();
         if (totalOptions == 0) {
-            return;
+            action += "No valid moves to be made.";
+            return action;
         }
         int choice = r.nextInt(totalOptions);
 
@@ -102,7 +112,9 @@ public class ComputerPlayer extends Player {
         if (choice < validRoadEdges.size()) {
             int edgeIndex = validRoadEdges.get(choice).intValue();
             buildRoad(board, edgeIndex);
-            return;
+            action += "Placed road at edge " + edgeIndex;
+            return action;
+
         }
 
         // buildSettlement
@@ -110,13 +122,17 @@ public class ComputerPlayer extends Player {
         if (choice < validSettlementNodes.size()) {
             int nodeId = validSettlementNodes.get(choice).intValue();
             buildSettlement(board, nodeId);
-            return;
+            action += "Placed settlement at node " + nodeId;
+            return action;
+
         }
 
         // buildCity
         choice -= validSettlementNodes.size();
         int nodeId = validCityNodes.get(choice).intValue();
         buildCity(board, nodeId);
+        action += "Placed city at node " + nodeId;
+        return action;
         
     }
 

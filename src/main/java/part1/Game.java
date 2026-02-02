@@ -127,7 +127,8 @@ public class Game {
                 currentPlayerIndex = getPlayerIndexClockwise(startingPlayerIndex, step);
                 Player p = players.get(currentPlayerIndex);
 
-                p.turn(board);
+                String action = p.turn(board);
+                displayTurnSummary(rounds, p.getPlayerId(), action);
                 checkWinner();
 
                 if (isWinner) {

@@ -7,9 +7,12 @@ public abstract class Player {
 
     private final int playerId;
 
+    /** Amount of resources you have in your hand. */
     private final int[] resourceCounts = new int[ResourceType.values().length];
-    
+
+    /** Amount of buildings you have off the board. */
     private int[] buildingCounts = new int[BuildingKind.values().length];
+    /** Amount of roads you have off the board. */
     private int roadsCount;
     
     private int victoryPoints;
@@ -18,10 +21,14 @@ public abstract class Player {
 
     private final Random r;
 
+
     public Player(int playerId){
 
+        this.roadsCount = 15;
+        addBuilding(BuildingKind.SETTLEMENT, 5);
+        addBuilding(BuildingKind.CITY, 5);
+
         this.playerId = playerId;
-        this.roadsCount = 0;
         this.victoryPoints = 0;
         this.longestRoadStreak = 0;
         this.turns = 0;
@@ -29,7 +36,7 @@ public abstract class Player {
 
     }
 
-    public abstract void turn(Board board);
+    public abstract String turn(Board board);
 
 
 
