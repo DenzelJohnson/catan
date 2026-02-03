@@ -127,8 +127,13 @@ public class Game {
                 currentPlayerIndex = getPlayerIndexClockwise(startingPlayerIndex, step);
                 Player p = players.get(currentPlayerIndex);
 
+
+                int roll = p.diceRoll();
+                String resourceCollectionSummary = awardResourcesForAllPlayers(roll, p.getPlayerId());
+
                 String action = p.turn(board);
-                displayTurnSummary(rounds, p.getPlayerId(), action);
+                String finalTurnSummary = resourceCollectionSummary + action;
+                displayTurnSummary(rounds, p.getPlayerId(), finalTurnSummary);
                 checkWinner();
 
                 if (isWinner) {
@@ -174,6 +179,109 @@ public class Game {
 
 
 
+
+
+    public String awardResourcesForAllPlayers(int roll, int currentPlayerId) {
+
+        int lumberGained = 0;
+        int brickGained = 0;
+        int woolGained = 0;
+        int grainGained = 0;
+        int oreGained = 0;
+
+        for (int tileId = 0; tileId < Board.TILE_COUNT; tileId++) {
+
+            Board.TerrainTile tile = board.getTile(tileId);
+
+            if (tile == null){
+                continue;
+            }
+            if (tile.diceToken != roll) {
+                continue;
+            }
+            if (tile.resourceType == null) { // desert
+                continue;
+            }
+            
+            for (int i = 0; i < tile.cornerNodeIdsClockwise.length; i++) {
+
+                int nodeId = tile.cornerNodeIdsClockwise[i];
+
+                Board.Building building = board.getBuilding(nodeId);
+                if (building == null){
+                    continue;
+                }
+
+                int amount;
+                if (building.kind == BuildingKind.SETTLEMENT) {
+                    amount = 1; 
+                } else {
+                    amount = 2;
+                }
+
+                Player owner = getPlayerById(building.ownerPlayerId);
+                if (owner == null) {
+                    continue;
+                }
+                owner.addResource(tile.resourceType, amount);
+
+                if (building.ownerPlayerId == currentPlayerId) {
+                    if (tile.resourceType == ResourceType.LUMBER) {
+                        lumberGained += amount;
+                    }
+                    if (tile.resourceType == ResourceType.BRICK) {
+                        brickGained += amount;
+                    }
+                    if (tile.resourceType == ResourceType.WOOL) {
+                        woolGained += amount;
+                    }
+                    if (tile.resourceType == ResourceType.GRAIN) {
+                        grainGained += amount;
+                    }
+                    if (tile.resourceType == ResourceType.ORE) {
+                        oreGained += amount;
+                    }
+                }
+                
+            }
+        }
+
+        String gained = "";
+        if (lumberGained > 0) {
+            gained += "+ " + lumberGained + " LUMBER ";
+        }
+        if (brickGained > 0) {
+            gained += "+ " + brickGained + " BRICK ";
+        }
+        if (woolGained > 0) {
+            gained += "+ " + woolGained + " WOOL ";
+        }
+        if (grainGained > 0) {
+            gained += "+ " + grainGained + " GRAIN ";
+        }
+        if (oreGained > 0) {
+            gained += "+ " + oreGained + " ORE ";
+        }
+
+        if (gained.length() == 0) {
+            gained = "gained nothing";
+        } else {
+            gained = "gained " + gained.trim();
+        }
+        
+        return "Rolled " + roll + ", " + gained + ". ";
+
+    }
+
+    private Player getPlayerById(int playerId) {
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+            if (p.getPlayerId() == playerId) {
+                return p;
+            }
+        }
+        return null;
+    }
 
     private int getPlayerIndexClockwise(int startIndex, int stepsForward) {
 
@@ -251,14 +359,14 @@ public class Game {
 
         System.out.println("[" + roundNumber + "] / [" + playerId + "]: " + action);
 
-        
+        /*
         try { 
             Thread.sleep(500);
         } 
 
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        }
+        }*/
 
     }
 
@@ -290,7 +398,7 @@ public class Game {
         summary.append("---------------------------------------------------------------------------------\n\n");
         System.out.print(summary.toString());
 
-
+/*
         try { 
             Thread.sleep(500);
         } 
@@ -298,7 +406,7 @@ public class Game {
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-
+*/
     }
 
 

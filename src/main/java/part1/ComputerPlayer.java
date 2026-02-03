@@ -23,52 +23,15 @@ public class ComputerPlayer extends Player {
 
     // 1) start turn with dice roll
         String action = "";
-        int roll = diceRoll();
 
 
-    // 2) check to add resources based on roll
-        for (int tileId = 0; tileId < Board.TILE_COUNT; tileId++) {
-
-            Board.TerrainTile tile = board.getTile(tileId);
-
-            if (tile == null){
-                continue;
-            }
-            if (tile.diceToken != roll) {
-                continue;
-            }
-            if (tile.resourceType == null) { // desert
-                continue;
-            }
-            
-            for (int i = 0; i < tile.cornerNodeIdsClockwise.length; i++) {
-
-                int nodeId = tile.cornerNodeIdsClockwise[i];
-
-                Board.Building building = board.getBuilding(nodeId);
-                if (building == null){
-                    continue;
-                }
-
-                if (building.ownerPlayerId != getPlayerId()){
-                    continue;
-                }
-
-                int amount;
-                if (building.kind == BuildingKind.SETTLEMENT) {
-                    amount = 1; 
-                } else {
-                    amount = 2;
-                }
-
-                addResource(tile.resourceType, amount);
-                action += "Combined dice roll is " + roll + ". So, collected " + amount + " " + tile.resourceType + ". ";
-
-            }
-
-        }
 
 
+
+    // 3) Find all valid moves between...
+        // --> Build road
+        // --> Build settlement
+        // --> Build city
         int totalCards = 0;
         for (int i = 0; i < ResourceType.values().length; i++) {
             ResourceType type = ResourceType.values()[i];
@@ -77,10 +40,6 @@ public class ComputerPlayer extends Player {
 
         if (totalCards > 7) { // R1.8
 
-        // 3) Find all valid moves between...
-            // --> Build road
-            // --> Build settlement
-            // --> Build city
             // a) validate user has enough resources before checking valid moves
             boolean canBuildRoad = canAffordRoad();
             boolean canBuildSettlement = canAffordSettlement();

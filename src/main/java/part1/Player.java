@@ -39,6 +39,14 @@ public abstract class Player {
 
     public abstract String turn(Board board);
 
+
+
+
+
+
+
+
+
     // helpers
 
     public int diceRoll() {
@@ -46,7 +54,7 @@ public abstract class Player {
         int die2 = r.nextInt(6) + 1;
         return die1 + die2;
     }
-
+    
     // Resources
     public void buildRoad(Board board, int edgeIndex) {
         spendResource(ResourceType.LUMBER, 1);
