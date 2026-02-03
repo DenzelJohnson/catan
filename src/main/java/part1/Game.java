@@ -252,13 +252,19 @@ public class Game {
         System.out.println("[" + roundNumber + "] / [" + playerId + "]: " + action);
 
         
+<<<<<<< HEAD
         try { 
             Thread.sleep(500);
         } 
+=======
+        // try { 
+        //     Thread.sleep(1000);
+        // } 
+>>>>>>> 4082fc6 (Fatihun Test commit 2)
 
-        catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // catch (InterruptedException e) {
+        //     Thread.currentThread().interrupt();
+        // }
 
     }
 
@@ -291,13 +297,19 @@ public class Game {
         System.out.print(summary.toString());
 
 
+<<<<<<< HEAD
         try { 
             Thread.sleep(500);
         } 
+=======
+        // try { 
+        //     Thread.sleep(2000);
+        // } 
+>>>>>>> 4082fc6 (Fatihun Test commit 2)
 
-        catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // catch (InterruptedException e) {
+        //     Thread.currentThread().interrupt();
+        // }
 
     }
 

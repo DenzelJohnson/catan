@@ -25,6 +25,17 @@ import java.util.*;
 
  */
 
+<<<<<<< HEAD
+=======
+/**
+ * 
+ * 
+ * Fatihun part 2
+ * 
+ * 
+ * 
+ */
+>>>>>>> 4082fc6 (Fatihun Test commit 2)
 
 public class Board {
 
