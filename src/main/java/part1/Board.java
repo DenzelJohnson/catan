@@ -12,17 +12,14 @@ import java.util.*;
  *      4) Building
  *      5) Road
  * 
- * 
- * Denzel was also here
  */
 
 /**
  * 
- * 
- * Fatihun committed
- * 
- * 
+ * Denzel
+ * Fatihun
  */
+
 
 public class Board {
 
