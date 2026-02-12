@@ -6,6 +6,7 @@ public class Game {
 
     private static final int TARGET_VICTORY_POINTS = 10;
     private static final int MAX_ROUNDS = 8192;
+    private int maxRounds;
 
     private final Board board;
     private final List<Player> players;
@@ -33,9 +34,14 @@ public class Game {
         this.winner = null;
 
         this.longestRoadHolder = null;
+        this.maxRounds = MAX_ROUNDS;
 
     }
 
+    public Game(Board board, List<Player> players, int usersmaxRounds) {
+    this(board, players);
+    this.maxRounds = usersmaxRounds;
+    }
 
 
 
@@ -121,7 +127,7 @@ public class Game {
 
     private void playMainGame() {
 
-        while (!isWinner && rounds < MAX_ROUNDS) {
+        while (!isWinner && rounds < maxRounds) {
 
             for (int step = 0; step < players.size(); step++){
                 currentPlayerIndex = getPlayerIndexClockwise(startingPlayerIndex, step);
