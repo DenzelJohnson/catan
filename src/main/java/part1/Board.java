@@ -22,7 +22,14 @@ import java.util.*;
 
  * Denzel
  * Fatihun
+<<<<<<< HEAD
 
+=======
+ * 
+ * Fatihun committed
+ * 
+ * Ify is here
+>>>>>>> ify
  */
 
 
