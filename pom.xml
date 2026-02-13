@@ -41,6 +41,16 @@
   </build>
   <!-- End:: This specifies the main class for the jar file to be executed by 'java -jar filename.jar' -->
 
+   <dependencies>
+
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.9.3</version>
+        <scope>test</scope>
+    </dependency>
+
+   </dependencies>
 
 
 
