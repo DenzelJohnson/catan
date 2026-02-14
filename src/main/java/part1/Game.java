@@ -438,7 +438,6 @@ public class Game {
     private void updateLongestRoadHolder() {
         Player bestPlayer = null;
         int bestLen = 0;
-        boolean tie = false;
 
         for (Player p : players) {
             int len = board.computeLongestRoadForPlayer(p.getPlayerId());
@@ -447,13 +446,10 @@ public class Game {
             if (len > bestLen) {
                 bestLen = len;
                 bestPlayer = p;
-                tie = false;
-            } else if (len == bestLen && len != 0) {
-                tie = true;
             }
         }
 
-        if (bestLen < 5 || tie) {
+        if (bestLen < 5) {
             if (longestRoadHolder != null) {
                 longestRoadHolder.addVictoryPoints(-2);
                 longestRoadHolder = null;
