@@ -430,6 +430,45 @@ public class Game {
      * @return summary string of what the current player gained
      */
 
+    /**
+     * Updates the longest road holder by iterating through all the current players
+     * This method checks for the largest length of road each player has and updates longest road holder accordingly
+     */
+    private void updateLongestRoadHolder() {
+        Player bestPlayer = null;
+        int bestLen = 0;
+        boolean tie = false;
+
+        for (Player p : players) {
+            int len = board.computeLongestRoadForPlayer(p.getPlayerId());
+            p.setLongestRoadStreak(len);
+
+            if (len > bestLen) {
+                bestLen = len;
+                bestPlayer = p;
+                tie = false;
+            } else if (len == bestLen && len != 0) {
+                tie = true;
+            }
+        }
+
+        if (bestLen < 5 || tie) {
+            if (longestRoadHolder != null) {
+                longestRoadHolder.addVictoryPoints(-2);
+                longestRoadHolder = null;
+            }
+            return;
+        }
+
+        if (longestRoadHolder == null) {
+            longestRoadHolder = bestPlayer;
+            longestRoadHolder.addVictoryPoints(2);
+        } else if (longestRoadHolder.getPlayerId() != bestPlayer.getPlayerId()) {
+            longestRoadHolder.addVictoryPoints(-2);
+            longestRoadHolder = bestPlayer;
+            longestRoadHolder.addVictoryPoints(2);
+        }
+    }
     public String awardResourcesForAllPlayers(int roll, int currentPlayerId) {
 
         int lumberGained = 0;

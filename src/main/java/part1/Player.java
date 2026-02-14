@@ -292,6 +292,8 @@ public abstract class Player {
         return longestRoadStreak;
     }
 
+    public void setLongestRoadStreak(int value) { this.longestRoadStreak = value; }
+
     public void addVictoryPoints(int amount) {
         victoryPoints += amount;
     }

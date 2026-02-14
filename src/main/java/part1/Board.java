@@ -397,6 +397,73 @@ public class Board {
         return false;
     }
     /**
+     * Returns the longest road that a player has
+     *
+     * @param playerId player to check
+     * @return longest road that the player has
+     */
+
+    public int computeLongestRoadForPlayer(int playerId) {
+        int longestRoad = 0;
+
+        for (int edgeIndex = 0; edgeIndex < EDGE_COUNT; edgeIndex++) {
+            Road r = getRoad(edgeIndex);
+            if (r == null || r.ownerPlayerId != playerId) continue;
+
+            boolean[] usedEdges = new boolean[EDGE_COUNT];
+            usedEdges[edgeIndex] = true;
+
+            Edge e = getEdge(edgeIndex);
+
+            int len1 = 1 + dfsExtendFromNode(playerId, e.node1, usedEdges);
+            int len2 = 1 + dfsExtendFromNode(playerId, e.node2, usedEdges);
+
+            longestRoad = Math.max(longestRoad, Math.max(len1, len2));
+
+            usedEdges[edgeIndex] = false;
+        }
+
+        return longestRoad;
+    }
+
+    /**
+     * Helper function to search for the longest road
+     *
+     * @param playerId to check player
+     * @param nodeId to check Node
+     * @param usedEdges to check whether the edges have been used
+     * @return the longest road from a node of a player
+     */
+    private int dfsExtendFromNode(int playerId, int nodeId, boolean[] usedEdges) {
+        Building b = getBuilding(nodeId);
+        if (b != null && b.ownerPlayerId != playerId) return 0;
+
+        int best = 0;
+
+        List<Integer> adjEdges = getAdjacentEdgeIndicesForNode(nodeId);
+        for (int i = 0; i < adjEdges.size(); i++) {
+            int edgeIndex = adjEdges.get(i);
+
+            if (edgeIndex < 0 || edgeIndex >= EDGE_COUNT) continue;
+            if (usedEdges[edgeIndex]) continue;
+
+            Road r = getRoad(edgeIndex);
+            if (r == null || r.ownerPlayerId != playerId) continue;
+
+            usedEdges[edgeIndex] = true;
+
+            Edge e = getEdge(edgeIndex);
+            int nextNode = (e.node1 == nodeId) ? e.node2 : e.node1;
+
+            best = Math.max(best, 1 + dfsExtendFromNode(playerId, nextNode, usedEdges));
+
+            usedEdges[edgeIndex] = false;
+        }
+
+        return best;
+    }
+
+    /**
      * Returns the edge indices that touch a given node.
      *
      * @param nodeId node to check
